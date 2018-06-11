@@ -13,6 +13,14 @@ class App extends Component {
     };
   }
 
+  setErrorMessage(message) {
+    this.setState({
+      address: message,
+      lat: 0,
+      lng: 0,
+    });
+  }
+
   handlePlaceSubmit(place) {
     axios.get(GEOCODE_ENDPOINT, { params: { address: place } })
       .then((results) => {
@@ -30,24 +38,16 @@ class App extends Component {
             break;
           }
           case 'ZERO_RESULTS': {
-            this.setState({
-              address: 'Could not find a result.',
-              lat: 0,
-              lng: 0,
-            });
+            this.setErrorMessage('Could not find a result.');
             break;
           }
           default: {
-            this.setState({
-              address: 'ERROR',
-              lat: 0,
-              lng: 0,
-            });
+            this.setErrorMessage('Something happened...');
           }
         }
       })
       .catch((err) => {
-        console.log(err);
+        this.setErrorMessage('Network Error...');
       });
   }
 
